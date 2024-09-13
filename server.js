@@ -1,42 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import authRoutes from './routes/auth.js';
+import dashboardRoutes from './routes/dashboard.js';
+import db from './db.js';
 
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs')
+app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-    res.send("Мейн страничке (АРТЕМ СДЕЛАЙ ФРОНТ)")
-})
+app.use('/', authRoutes);
+app.use('/', dashboardRoutes);
 
-app.get("/register", (req, res) => {
-    res.render("register.ejs");
-})
-
-app.get("/login", (req, res) => {
-    res.send("Страничка авторизации (АРТЕМ СДЕЛАЙ ФРОНТ)")
-})
-
-app.get("/panel", (req, res) => {
-    res.send("Панель юзера (АРТЕМ СДЕЛАЙ ФРОНТ")
-})
-
-app.post("/register", (req, res) => {
-    const login = req.body.login
-    const email = req.body.email
-    const password = req.body.password
-
-    console.log(login, email, password)
-
-    res.redirect("/panel")
-})
-
-app.post("/login", (req, res) => {
-    
-})
-
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+db.sync({ force: false }).then(() => {
+    app.listen(port, console.log(`Server is running on port: ${port}`))
 })
