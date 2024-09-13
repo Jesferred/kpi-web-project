@@ -4,27 +4,23 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Registration form</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/style.css">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <body>
         <div class="wrapper">
-            <form action="">
+            <form action="/register" method="POST">
                     <h1>Login</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="First name" required>
+                    <input type="text" placeholder="Login" name="login" required>
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="text" placeholder="Second name" required>
-                    <i class='bx bxs-user'></i>
-                </div>
-                <div class="input-box">
-                    <input type="text" placeholder="E-mail" required>
+                    <input type="text" placeholder="E-mail" name="email" required>
                     <i class='bx bxs-envelope' ></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                     <i class='bx bxs-low-vision icon-visibility' id="showPassword"></i>
                     <i class='bx bxs-show icon-visibility' id="hidePassword" style="display: none;"></i>
                 <p id="passwordError" style="color: red; display: none;">Password must be at least 8 characters long.</p>
@@ -41,6 +37,6 @@
                 </div>
             </form>
         </div>
-        <script src="app.js"></script>
+        <script src="index.js"></script>
     </body>
     </html>

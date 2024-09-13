@@ -15,7 +15,7 @@ body{
     /* vh використовуємо замість пікселів для 
     автопідстройки до розмірів браузера(телефону) */
     background: seagreen;
-    background:url('imgs/img1.webp');
+    /* background:url('public/img/img1.webp'); */
     background-size: cover;
     background-position: center;
 }
