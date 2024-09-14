@@ -12,10 +12,10 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    /* vh використовуємо замість пікселів для 
+    /* vh використовуємо замість пікселів для
     автопідстройки до розмірів браузера(телефону) */
     background: seagreen;
-    /* background:url('public/img/img1.webp'); */
+    background:url('imgs/img2.png');
     background-size: cover;
     background-position: center;
 }
@@ -27,7 +27,7 @@ body{
     backdrop-filter:blur(20px);
     box-shadow: 0 0 10px rgb(0,0,0, .2);
     color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 30px 40px;
 
 }
@@ -51,7 +51,7 @@ body{
     border: none;
     outline: none;
     border: 2px solid rgb(255,255,255, .2);
-    border-radius: 40px;
+    border-radius: 10px;
     font-size: 16px;
     color: #fff;
     padding: 20px 45px 20px 20px;
@@ -87,11 +87,11 @@ body{
 .wrapper .btn{
     width: 100%;
     height: 45px;
-    background: #fff;
+    background: #fff;;
     border: none;
     outline: none;
     /* на відміну від border не дод елемент, а покриває зверху */
-    border-radius: 40px;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgb(0,0,0, .1);
     cursor: pointer;
     font-size: 16px;
@@ -100,7 +100,7 @@ body{
 }
 
 .btn:hover{
-    background-color: #032143;
+    background-color: grey;
     color: #fff;
 }
 
@@ -118,7 +118,7 @@ body{
 
 .log_in_link p a:hover{
     text-decoration: underline;
-    color: #032143;
+    color: gray;
 }
 
 #passwordError {
