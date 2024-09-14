@@ -15,7 +15,7 @@ body{
     /* vh використовуємо замість пікселів для
     автопідстройки до розмірів браузера(телефону) */
     background: seagreen;
-    background:url('public/imgs/img2.png');
+    background:url('/imgs/img2.png');
     background-size: cover;
     background-position: center;
 }
