@@ -1,5 +1,17 @@
+
+// dashboard.js
+import UserPassword from '../models/UserPassword.js';
+
 export default {
-    dashboardView: (req, res) => {
-        res.render('Dashboard', {login: req.user.login});
+    dashboardView: async (req, res) => {
+        const userId = req.user.id;
+
+        try {
+            const passwords = await UserPassword.findAll({ where: { userId } });
+            res.render('dashboard', { passwords, login: req.user.login }); // Убедись, что передаешь passwords
+        } catch (error) {
+            console.error(error);
+            res.render('dashboard', { error: 'Failed to retrieve passwords', passwords: [] }); // Передай пустой массив, если ошибка
+        }
     }
-}
+};

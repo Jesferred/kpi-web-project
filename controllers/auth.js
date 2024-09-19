@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import User from '../models/User.js';
 import passport from 'passport';
+import encryptionService from '../services/encryption.js'
 
 export default {
     registerView: (req, res) => res.render('Registration'),
@@ -17,7 +18,9 @@ export default {
             return res.render('Registration', { error: 'A user account already exist with this email' });
         }
 
-        await User.create({ login, email, password: bcrypt.hashSync(password, 8)});
+        const secretKey = encryptionService.generateSecretKey();
+
+        await User.create({ login, email, password: bcrypt.hashSync(password, 8), secretKey});
 
         res.redirect('/login');
     },
