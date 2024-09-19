@@ -30,5 +30,5 @@ app.use('/', dashboardRoutes);
 app.use('/', mainPageRoutes);
 
 db.sync({ force: false }).then(() => {
-    app.listen(PORT, console.log(`Server is running on port: ${port}`))
+    app.listen(PORT, console.log(`Server is running on port: ${PORT}`))
 })
