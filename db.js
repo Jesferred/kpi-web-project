@@ -1,6 +1,13 @@
 import Sequelize from 'sequelize';
 
-export default new Sequelize('gigabase', 'postgres', '23022004', {
-    host: 'localhost',
-    dialect: 'postgres'
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+    },
 });
+
+export default sequelize;
