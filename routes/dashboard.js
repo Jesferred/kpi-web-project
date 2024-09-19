@@ -4,6 +4,6 @@ import { protectRoute }  from '../auth.js';
 
 const router = express.Router();
 
-router.get('/', protectRoute , dashboardController.dashboardView);
+router.get('/dashboard', protectRoute , dashboardController.dashboardView);
 
 export default router;
