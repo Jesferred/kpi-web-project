@@ -24,7 +24,7 @@ export default {
             res.redirect('/dashboard?passwordsaved');
         } catch (error) {   
             console.error(error);
-            res.render('dashboard', { error: 'Failed to save password' });
+            res.render('Dashboard', { error: 'Failed to save password' });
         }
     },
 
@@ -33,10 +33,10 @@ export default {
         try {
             const passwords = await UserPassword.findAll({ where: { userId } });
             console.log(passwords)
-            res.render('dashboard', { passwords });
+            res.render('Dashboard', { passwords });
         } catch (error) {
             console.error(error);
-            res.render('dashboard', { error: 'Failed to retrieve passwords' });
+            res.render('Dashboard', { error: 'Failed to retrieve passwords' });
         }
     },
 };

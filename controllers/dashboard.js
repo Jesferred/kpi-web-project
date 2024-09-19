@@ -8,10 +8,10 @@ export default {
 
         try {
             const passwords = await UserPassword.findAll({ where: { userId } });
-            res.render('dashboard', { passwords, login: req.user.login }); // Убедись, что передаешь passwords
+            res.render('Dashboard', { passwords, login: req.user.login }); // Убедись, что передаешь passwords
         } catch (error) {
             console.error(error);
-            res.render('dashboard', { error: 'Failed to retrieve passwords', passwords: [] }); // Передай пустой массив, если ошибка
+            res.render('Dashboard', { error: 'Failed to retrieve passwords', passwords: [] }); // Передай пустой массив, если ошибка
         }
     }
 };
