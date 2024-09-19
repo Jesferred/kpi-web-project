@@ -24,12 +24,12 @@ export default {
   
     loginUser: (req, res) => {
       passport.authenticate('local', {
-        successRedirect: '/?loginsuccess',
+        successRedirect: '/dashboard/?loginsuccess',
         failureRedirect: '/login?error'
       }) (req, res);
     },
   
     logoutUser: (req, res) => {
-      // ...
+      req.logout(() => res.redirect('/login?loggedout'))
     }
   };

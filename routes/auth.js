@@ -1,6 +1,5 @@
 import express from 'express';
 import authController from '../controllers/auth.js'
-import dashboardController from '../controllers/dashboard.js';
 
 const router = express.Router();
 router.get('/register', authController.registerView);
