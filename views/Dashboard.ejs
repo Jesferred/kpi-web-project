@@ -80,43 +80,63 @@
                 </div>
                 <div class="field pass-f">
                     <label class="pop-label" for="pass">Password:</label>
-                    <input name="password" type="password" id="pass" placeholder="Введіть пароль">
+                    <input name="password" id="pass" placeholder="Введіть пароль">
                     <button onclick="copyToClipboard('pass')"><i class='bx bx-copy'></i></button>
                 </div>
+                <form id="generate-password-form">
+                    <div>
+                        <label for="length">Password Length:</label>
+                        <input type="number" id="length" name="length" value="8" min="6" max="20">
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="numbers" checked>
+                            Include Numbers
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="symbols" checked>
+                            Include Symbols
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="uppercase">
+                            Include Uppercase
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="excludeSimilarCharacters" checked>
+                            Exclude Similar Characters
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="strict" checked>
+                            Strict Mode
+                        </label>
+                    </div>
+                    <button type="button" class="generate-pass">Generate Password</button>
+                </form>
+
+                <!-- Поле для отображения сгенерированного пароля -->
+                <div id="generated-password"></div>
+
                 <div class="button-container">
                     <button type="submit" class="btn save-btn">Save</button>
                     <button class="btn close-popup">Cancel</button>
                 </div>
+            </div>
         </div>
-    </div>
     </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const decryptButtons = document.querySelectorAll('.decrypt-btn');
-
-            decryptButtons.forEach(button => {
-                button.addEventListener('click', async function () {
-                    const id = button.getAttribute('data-id');
-
-                    try {
-                        const response = await fetch(`/dashboard/decrypt/${id}`);
-                        const result = await response.json();
-
-                        if (result.decryptedPassword) {
-                            document.getElementById(`password-${id}`).textContent = result.decryptedPassword;
-                        } else {
-                            alert('Failed to decrypt password');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
             const deleteButtons = document.querySelectorAll('.delete-btn');
+            const decryptButtons = document.querySelectorAll('.decrypt-btn');
+            const generatePassButton = document.querySelector('.generate-pass');
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', async function () {
@@ -137,6 +157,80 @@
                         console.error('Error:', error);
                     }
                 });
+            });
+            
+            decryptButtons.forEach(button => {
+                button.addEventListener('click', async function () {
+                    const id = button.getAttribute('data-id');
+
+                    try {
+                        const response = await fetch(`/dashboard/decrypt/${id}`);
+                        const result = await response.json();
+
+                        if (result.decryptedPassword) {
+                            document.getElementById(`password-${id}`).textContent = result.decryptedPassword;
+                        } else {
+                            alert('Failed to decrypt password');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const generatePassButton = document.querySelector('.generate-pass');
+
+            // Проверяем, что кнопка найдена
+            if (!generatePassButton) {
+                console.error('Generate Password button not found');
+                return;
+            }
+
+            generatePassButton.addEventListener('click', async function (event) {
+                event.preventDefault(); // Предотвращаем перезагрузку страницы
+
+                // Получаем значения из формы
+                const length = document.getElementById('length').value;
+                const numbers = document.querySelector('input[name="numbers"]').checked;
+                const symbols = document.querySelector('input[name="symbols"]').checked;
+                const uppercase = document.querySelector('input[name="uppercase"]').checked;
+                const excludeSimilarCharacters = document.querySelector('input[name="excludeSimilarCharacters"]').checked;
+                const strict = document.querySelector('input[name="strict"]').checked;
+
+                try {
+                    // Отправляем запрос на сервер для генерации пароля
+                    const response = await fetch('/dashboard/generate-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'length': length,
+                            'numbers': numbers ? 'on' : '',
+                            'symbols': symbols ? 'on' : '',
+                            'uppercase': uppercase ? 'on' : '',
+                            'excludeSimilarCharacters': excludeSimilarCharacters ? 'on' : '',
+                            'strict': strict ? 'on' : ''
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    // Получаем ответ от сервера
+                    const result = await response.json();
+                    console.log(result); // Выводим результат в консоль
+
+                    // Вставляем сгенерированный пароль в поле или показываем в поп-апе
+                    document.getElementById('pass').value = result.password;
+                    document.getElementById('generated-password').textContent = `Generated Password: ${result.password}`;
+                } catch (error) {
+                    console.error('Error during password generation:', error);
+                }
             });
         });
 

@@ -8,7 +8,7 @@ router.get('/dashboard', protectRoute , dashboardController.dashboardView, dashb
 router.post('/dashboard/add', dashboardController.savePassword)
 router.get('/dashboard/delete/:id', dashboardController.deleteUserPassword)
 router.get('/dashboard/decrypt/:id', dashboardController.decryptPassword)
-router.post('/generate-password', dashboardController.generateNewPassword);
+router.post('/dashboard/generate-password', dashboardController.generateNewPassword);
 router.get('/generate-password', dashboardController.viewTestPage);
 
 export default router;
