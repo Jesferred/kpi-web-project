@@ -21,13 +21,11 @@ export default {
     savePassword: async (req, res) => {
         const { website, login, password } = req.body;
         const userId = req.user.id;
-        console.log(userId)
-
         try {
             const user = await User.findByPk(userId);
             const { secretKey } = user;
             const encryptedData = encryptionService.encryptPassword(password, secretKey);
-
+            if ( website != '' && login != '' && password != '') {
             await UserPassword.create({
                 userId,
                 website,
@@ -35,8 +33,8 @@ export default {
                 password: encryptedData.password,
                 iv: encryptedData.iv
             });
-
             res.redirect('/dashboard?passwordsaved');
+        }
         } catch (error) {
             console.error(error);
             res.render('Dashboard', { error: 'Failed to save password' });
@@ -71,8 +69,6 @@ export default {
         }
     },
     
-
-
     decryptPassword: async (req, res) => {
         const { id } = req.params;
         try {
@@ -103,7 +99,7 @@ export default {
             strict: strict === 'on',
         });
 
-        // Возвращаем пароль в формате JSON
+        console.log(password);
         res.json({ password });
     }
 
