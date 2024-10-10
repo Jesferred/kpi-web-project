@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import Sequelize from 'sequelize';
 import config from './config/config.js';
 
-dotenv.config({ path: '.env.test' }); // Подгружаем файл .env.test
+dotenv.config({ path: '.env' }); // Подгружаем файл .env.test
 
 const env = process.env.NODE_ENV || 'development';
 const dbConfig = config[env];
