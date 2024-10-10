@@ -2,11 +2,11 @@ import dotenv from 'dotenv';
 import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
-import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
-import mainPageRoutes from './routes/mainPage.js';
-import db from './db.js';
-import { initPassport } from './auth.js';
+import authRoutes from '../routes/auth.js';
+import dashboardRoutes from '../routes/dashboard.js';
+import mainPageRoutes from '../routes/mainPage.js';
+import db from '../db.js';
+import { initPassport } from '../auth.js';
 
 dotenv.config({ path: '.env.test' }); // Подгружаем файл .env.test
 
@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 initPassport();

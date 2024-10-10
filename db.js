@@ -14,7 +14,7 @@ if (dbConfig.use_env_variable) {
         dialect: dbConfig.dialect,
         dialectOptions: {
             ssl: {
-                require: true,
+                require: false,
                 rejectUnauthorized: false, // Временное решение, если сертификат не проверяется
             },
         },

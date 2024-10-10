@@ -1,5 +1,5 @@
 import request from 'supertest';
-import server from '../../server_test.js';
+import server from '../../test/app_test.js';
 
 describe('Login Page', () => {
   it('should render the login page', async () => {
@@ -25,4 +25,6 @@ describe('Register page', () => {
     });
   });
   
-  
+  afterAll(async () => {
+    server.close();
+  })

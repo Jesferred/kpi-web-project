@@ -19,6 +19,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "express-session": "^1.18.0",
+    "generate-password": "^1.7.1",
     "jquery": "^3.7.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -36,12 +37,19 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFiles": ["dotenv/config"],
-    "moduleFileExtensions": ["js", "json"],
+    "setupFiles": [
+      "dotenv/config"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
     },
-    "testPathIgnorePatterns": ["/node_modules/"],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
     "coverageDirectory": "./coverage"
   }
 }
