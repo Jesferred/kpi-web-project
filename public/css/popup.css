@@ -1,0 +1,270 @@
+@import url('https://fonts.google.com/share?selection.family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900');
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Poppins', sans-serif;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: #ECDFCC;
+}
+
+.wrapper{
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main{
+    flex: 1 1 auto;
+}
+
+.sidebar {
+    width: 100px;
+    background-color: #181C14;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+}
+.sidebar .logo img {
+    width: 100%;
+    height: auto;
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;
+}
+.sidebar .info {
+    margin-top: 10px;
+}
+.sidebar .info p {
+    margin: 5px 0;
+}
+.sidebar .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0,0,0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #181C14;
+    font-weight: 600;
+    margin-top: auto;
+}
+
+.btn:hover{
+    background-color: red;
+    color: #fff;
+}
+
+.content {
+    min-height: 100%;
+    margin-left: 100px; /* Відступ зліва рівний ширині слайдбару */
+    padding: 10px;
+    width: calc(100% - 100px); /* Контент займатиме ширину, яка залишилась після слайдбару */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(255, 0, 0, 0);
+}
+.content .table-container {
+    width: 100%;
+    flex: 1 1 auto;
+    border-collapse: collapse;
+    border-radius: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+table{
+    width: 100%;
+}
+
+.tr{
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    background-color: #3C3D37;
+    color: #fff;
+}
+th, tr{
+    padding: 10px;
+    border: 2px solid #ccc;
+    background-color: #3C3D37;
+    color: #fff;
+}
+
+th:first-child{
+    width: 50px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+th:last-child{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.footer {
+    background-color: #3C3D37;
+    color: #fff;
+    text-align: right;
+    padding: 10px;
+}
+.footer .btn{
+    width: 80px;
+    height: 45px;
+    background: #fff;;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0,0,0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #3C3D37;
+    font-weight: 600;
+    margin-top: auto;
+}
+
+.footer .btn:hover{
+    background-color: #697565;
+    color: #fff;
+}
+
+.popup-bg{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+}
+.popup {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 40%;
+    border: 1px solid #3C3D37;
+    border-radius: 10px;
+    background-color: #ECDFCC;
+    padding: 20px;
+    border: 1px solid #ccc;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    gap: 25px;
+}
+
+
+.popup label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.popup input{
+    position: absolute;
+    right: 30px;
+    width: 80%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #3C3D37;
+    color: #fff;
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+
+.popup button {
+    width: 150px; /* Consistent button width */
+    height: 40px;
+    background-color: #3C3D37;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px; /* Spacing between buttons */
+}
+
+.popup button:hover {
+    background-color: #697565;
+}
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+.close-popup {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold; /* Emphasize close button */
+}
+.save-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold; /* Emphasize close button */
+}
+
+
+.close-popup:hover {
+    background-color: #ccc;
+}
+
+.popup .field{
+    display: flex;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Вирівнюємо кнопки праворуч */
+    margin-top: auto; /* Відсуваємо кнопки донизу контейнера */
+}
+
+.field button{
+    position: absolute;
+    border-radius: 10px;
+    right: 25px;
+    width: 30px;
+    height: 30px;
+    margin-top: 5px;
+}

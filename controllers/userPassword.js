@@ -32,11 +32,37 @@ export default {
         const userId = req.user.id;
         try {
             const passwords = await UserPassword.findAll({ where: { userId } });
-            console.log(passwords)
             res.render('Dashboard', { passwords });
         } catch (error) {
             console.error(error);
             res.render('Dashboard', { error: 'Failed to retrieve passwords' });
         }
     },
+
+    deleteUserPassword: async(req, res) => {
+        const { id } = req.params;
+        try {
+            const passwords = await UserPassword.findAll({ where: { userId } });
+            await UserPassword.destroy({ where: { id } });
+            res.render('Dashboard', { passwords });
+        } catch (error) {
+            console.error(error);
+        }
+    },
+
+    decryptPassword: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const userPassword = await UserPassword.findByPk(id);
+            const user = await User.findByPk(userPassword.userId);
+            const { secretKey } = user;
+            const decryptedData = encryptionService.decryptPassword(userPassword.password, userPassword.iv, secretKey);
+    
+            res.json({ decryptedPassword: decryptedData });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to decrypt password' });
+        }
+    },
+    
 };

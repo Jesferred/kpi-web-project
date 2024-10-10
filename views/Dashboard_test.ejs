@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigaKey</title>
+    <link rel="stylesheet" href="/css/popup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="wrapper">
+        <main class="main">
+            <div class="sidebar">
+                <div class="logo">
+                    <img src="/imgs/lightwpp.webp" alt="Логотип">
+                </div>
+                <div class="info">
+                    <p><%= login %></p>
+                </div>
+                <button onclick="window.location.href='/logout'" class="btn" id="logout-btn">Log Out</button>
+            </div>
+
+            <div class="content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>URL</th>
+                                <th>Login</th>
+                                <th>Pass</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <% passwords.forEach(function(password, index) { %>
+                            <tr data-id="<%= password.id %>">
+                                <td><%= ++index %></td>
+                                <td><%= password.website %></td>
+                                <td><%= password.login %></td>
+                                <td id="password-<%= password.id %>"><%= password.password %></td>
+                                <td><button class="decrypt-btn" data-id="<%= password.id %>">Decrypt</button></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </main>
+    <footer class="footer">
+                <button class="btn open-popup">Add</button>
+    </footer>  
+</div>   
+            
+    <form action="/dashboard/add" method="POST">
+    <div class="popup-bg">
+        <div class="popup">
+            <div class="field url-f">
+                <label class="pop-label" for="url">URL:</label>
+                <input name="website" type="text" id="url" placeholder="Введіть URL">
+                <button onclick="copyToClipboard('url')"><i class='bx bx-copy'></i></button>
+            </div>
+            <div class="field login-f">
+                <label class="pop-label" for="login">Loggin:</label>
+                <input name="login" type="text" id="login" placeholder="Введіть логін">
+                <button onclick="copyToClipboard('login')"><i class='bx bx-copy'></i></button>
+            </div>
+            <div class="field pass-f">
+                <label class="pop-label" for="pass">Password:</label>
+                <input name="password" type="password" id="pass" placeholder="Введіть пароль">
+                <button onclick="copyToClipboard('pass')"><i class='bx bx-copy'></i></button>
+            </div>
+
+            <!-- Форма генерации пароля -->
+            <div class="generate-section">
+                <form id="generate-password-form" method="POST" action="/generate-password">
+                    <div>
+                        <label for="length">Password Length:</label>
+                        <input type="number" id="length" name="length" value="8" min="6" max="20">
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="numbers" checked>
+                            Include Numbers
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="symbols" checked>
+                            Include Symbols
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="uppercase">
+                            Include Uppercase
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="excludeSimilarCharacters" checked>
+                            Exclude Similar Characters
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="strict" checked>
+                            Strict Mode
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">Generate Password</button>
+                </form>
+            </div>
+
+            <!-- Сгенерированный пароль -->
+            <div id="generated-password"></div>
+
+            <div class="button-container">
+                <button type="submit" class="btn save-btn">Save</button>
+                <button class="btn close-popup">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const decryptButtons = document.querySelectorAll('.decrypt-btn');
+        
+            decryptButtons.forEach(button => {
+                button.addEventListener('click', async function() {
+                    const id = button.getAttribute('data-id');
+                    
+                    try {
+                        const response = await fetch(`/dashboard/decrypt/${id}`);
+                        const result = await response.json();
+                        
+                        if (result.decryptedPassword) {
+                            document.getElementById(`password-${id}`).textContent = result.decryptedPassword;
+                        } else {
+                            alert('Failed to decrypt password');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+        //     // Логика для генерации пароля
+        //     document.getElementById('generate-password-form').addEventListener('submit', async function(event) {
+        //         event.preventDefault();
+                
+        //         const formData = new FormData(this);
+        //         const params = new URLSearchParams(formData).toString();
+
+        //         const response = await fetch('/generate-password', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/x-www-form-urlencoded',
+        //             },
+        //             body: params,
+        //         });
+
+        //         const result = await response.json();
+        //         document.getElementById('generated-password').textContent = `Generated Password: ${result.password}`;
+
+        //         // Автоматическое заполнение поля с паролем
+        //         document.getElementById('pass').value = result.password;
+        //     });
+        // });
+
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand('copy');
+            alert("Copied to clipboard: " + copyText.value);
+        }
+    </script>
+
+    <script src="/js/jquerry.min.js"></script>
+    <script src="/js/popup.js"></script>
+</body>
+</html>

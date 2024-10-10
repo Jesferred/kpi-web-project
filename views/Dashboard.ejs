@@ -1,47 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/header.css">
+    <title>GigaKey</title>
+    <link rel="stylesheet" href="/css/popup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
-    <div class="header">
-        <a href="#default" class="logo">GIGAKEY</a>
-        <div class="header-right">
-            <a href="/logout"> Logout </a>
-            <p> <%= login %></p>
-        </div>
+    <div class="wrapper">
+        <main class="main">
+            <div class="sidebar">
+                <div class="logo">
+                    <img src="/imgs/lightwpp.webp" alt="Логотип">
+                </div>
+                <div class="info">
+                    <p>
+                        <%= login %>
+                    </p>
+                </div>
+                <button onclick="window.location.href='/logout'" class="btn" id="logout-btn">Log Out</button>
+            </div>
+
+            <div class="content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>URL</th>
+                                <th>Login</th>
+                                <th>Pass</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <% passwords.forEach(function(password, index) { %>
+                                <tr data-id="<%= password.id %>">
+                                    <td>
+                                        <%= ++index %>
+                                    </td>
+                                    <td>
+                                        <%= password.website %>
+                                    </td>
+                                    <td>
+                                        <%= password.login %>
+                                    </td>
+                                    <td id="password-<%= password.id %>">
+                                        <%= password.password %>
+                                    </td>
+                                    <td><button class="decrypt-btn" data-id="<%= password.id %>">Decrypt</button>
+                                    <td><button class="delete-btn" data-id="<%= password.id %>">Delete</button></td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <button class="btn open-popup">Add</button>
+        </footer>
     </div>
 
     <form action="/dashboard/add" method="POST">
-        <div class="input-box">
-            <input type="text" name="website" placeholder="website URL" required>
+        <div class="popup-bg">
+            <div class="popup">
+                <div class="field url-f">
+                    <label class="pop-label" for="url">URL:</label>
+                    <input name="website" type="text" id="url" placeholder="Введіть URL">
+                    <button onclick="copyToClipboard('url')"><i class='bx bx-copy'></i></button>
+                </div>
+                <div class="field login-f">
+                    <label class="pop-label" for="login">Loggin:</label>
+                    <input name="login" type="text" id="login" placeholder="Введіть логін">
+                    <button onclick="copyToClipboard('login')"><i class='bx bx-copy'></i></button>
+                </div>
+                <div class="field pass-f">
+                    <label class="pop-label" for="pass">Password:</label>
+                    <input name="password" type="password" id="pass" placeholder="Введіть пароль">
+                    <button onclick="copyToClipboard('pass')"><i class='bx bx-copy'></i></button>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="btn save-btn">Save</button>
+                    <button class="btn close-popup">Cancel</button>
+                </div>
         </div>
-        <div class="input-box">
-            <input type="text" name="login" id="login" placeholder="Login" required>
-        </div>
-        <div class="input-box">
-            <input type="password" name="password" id="password" placeholder="password" required>
-        </div>
-        <button type="submit" class="btn">Add new password</button>
+    </div>
     </form>
 
-    <h1>Stored Passwords:</h1>
-    <table>
-        <tr>
-            <th>URL</th>
-            <th>Login</th>
-            <th>Password</th>
-        </tr>
-        <% passwords.forEach(function(password) { %>
-            <tr>
-                <td><%= password.website %></td>
-                <td><%= password.login %></td>
-                <td><%= password.password %></td>
-            </tr>
-        <% }); %>
-    </table>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const decryptButtons = document.querySelectorAll('.decrypt-btn');
+
+            decryptButtons.forEach(button => {
+                button.addEventListener('click', async function () {
+                    const id = button.getAttribute('data-id');
+
+                    try {
+                        const response = await fetch(`/dashboard/decrypt/${id}`);
+                        const result = await response.json();
+
+                        if (result.decryptedPassword) {
+                            document.getElementById(`password-${id}`).textContent = result.decryptedPassword;
+                        } else {
+                            alert('Failed to decrypt password');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async function () {
+                    const id = button.getAttribute('data-id');
+                    try {
+                        const response = await fetch(`/dashboard/delete/${id}`);
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Удаляем строку из таблицы
+                            const row = document.querySelector(`tr[data-id="${id}"]`);
+                            row.remove();
+                        } else {
+                            alert('Failed to delete password');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand('copy');
+            alert("Copied to clipboard: " + copyText.value);
+        }
+    </script>
+
+    <script src="/js/jquerry.min.js"></script>
+    <script src="/js/popup.js"></script>
 </body>
+
 </html>

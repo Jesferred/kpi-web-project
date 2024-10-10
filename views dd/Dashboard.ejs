@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/header.css">
+</head>
+<body>
+    <div class="header">
+        <a href="#default" class="logo">GIGAKEY</a>
+        <div class="header-right">
+            <a href="/logout"> Logout </a>
+            <p> <%= login %></p>
+        </div>
+    </div>
+
+    <form action="/dashboard/add" method="POST">
+        <div class="input-box">
+            <input type="text" name="website" placeholder="website URL" required>
+        </div>
+        <div class="input-box">
+            <input type="text" name="login" id="login" placeholder="Login" required>
+        </div>
+        <div class="input-box">
+            <input type="password" name="password" id="password" placeholder="password" required>
+        </div>
+        <button type="submit" class="btn">Add new password</button>
+    </form>
+
+    <h1>Stored Passwords:</h1>
+    <table>
+        <tr>
+            <th>URL</th>
+            <th>Login</th>
+            <th>Password</th>
+        </tr>
+        <% passwords.forEach(function(password) { %>
+            <tr>
+                <td><%= password.website %></td>
+                <td><%= password.login %></td>
+                <td><%= password.password %></td>
+            </tr>
+        <% }); %>
+    </table>
+</body>
+</html>
