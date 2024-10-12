@@ -70,16 +70,18 @@ body, html {
 }
 
 .content {
-    min-height: 100%;
-    margin-left: 100px; /* Відступ зліва рівний ширині слайдбару */
+    min-height: calc(100vh - 100px);
+    margin-left: 100px;
     padding: 10px;
-    width: calc(100% - 100px); /* Контент займатиме ширину, яка залишилась після слайдбару */
+    width: calc(100% - 100px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: rgba(255, 0, 0, 0);
 }
 .content .table-container {
+    min-height: 400px;
+    min-height: calc(100vh-200px);
     width: 100%;
     flex: 1 1 auto;
     border-collapse: collapse;
@@ -87,6 +89,25 @@ body, html {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 10px;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+    background-color: #3C3D37;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #697565;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #ECDFCC;
+}
+
+.table-container::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: #3C3D37;
 }
 
 table{
@@ -173,6 +194,24 @@ th:last-child{
     gap: 25px;
 }
 
+.popup .close-popup  {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #3C3D37;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+
 
 .popup label {
     display: block;
@@ -193,7 +232,7 @@ th:last-child{
 }
 
 .popup button {
-    width: 150px; /* Consistent button width */
+    width: 150px;
     height: 40px;
     background-color: #3C3D37;
     color: #fff;
@@ -203,7 +242,7 @@ th:last-child{
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
-    margin-right: 10px; /* Spacing between buttons */
+    margin-right: 10px;
 }
 
 .popup button:hover {
@@ -211,44 +250,67 @@ th:last-child{
 }
 .button-container {
     display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
+    justify-content: flex-end;
 }
-.close-popup {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    width: 30px;
-    height: 30px;
-    background-color: #ddd;
-    border: none;
-    outline: none;
-    border-radius: 50%;
-    cursor: pointer;
-    color: #333;
-    font-size: 18px;
-    font-weight: bold; /* Emphasize close button */
-}
+
 .save-btn {
     position: absolute;
-    bottom: 30px;
-    left: 30px;
-    width: 30px;
-    height: 30px;
-    background-color: #ddd;
-    border: none;
-    outline: none;
-    border-radius: 50%;
+    right: 20px;
+    bottom: 20px;
+    background-color: #3C3D37;
+    color: #fff;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
     cursor: pointer;
-    color: #333;
-    font-size: 18px;
-    font-weight: bold; /* Emphasize close button */
 }
 
-
-.close-popup:hover {
-    background-color: #ccc;
+.save-btn:hover {
+    background-color: #697565;
 }
 
+.generate-pass {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    background-color: #3C3D37;
+    color: #fff;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.generate-pass:hover {
+    background-color: #697565;
+}
+
+/* Маленька кнопка із шестернею біля кнопки генерації */
+.button-container .settings-btn {
+    position: absolute;
+    left: 172px;
+    bottom: 20px;
+    background-color: #3C3D37;
+    color: #fff;
+    width: 30px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.settings-btn:hover {
+    background-color: #697565;
+}
+
+.close-popup-settings {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
 .popup .field{
     display: flex;
     align-items: center;
@@ -268,3 +330,90 @@ th:last-child{
     height: 30px;
     margin-top: 5px;
 }
+
+.popup-bg-settings{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.popup-settings {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 40%;
+    border: 1px solid #3C3D37;
+    border-radius: 10px;
+    background-color: #ECDFCC;
+    padding: 10px;
+    border: 1px solid #ccc;
+    padding-bottom: 30px;
+    padding-top: 10px;
+    gap: 25px;
+    padding-left: 30px;
+}
+
+.popup-settings .close-popup-settings {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #3C3D37;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.popup-settings button {
+    width: 150px;
+    height: 40px;
+    background-color: #3C3D37;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.popup-settings button:hover {
+    background-color: #697565;
+}
+
+.popup-settings .field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.popup-settings label {
+    margin-right: 10px;
+}
+
+.popup-settings input[type="number"] {
+    width: 160px;
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #3C3D37;
+    color: #fff;
+}
+
+.popup-settings input[type="checkbox"] {
+    margin: 0px;
+}
+
