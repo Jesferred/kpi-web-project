@@ -42,19 +42,38 @@
                                     <td>
                                         <%= ++index %>
                                     </td>
-                                    <td>
+                                    <td id="website">
                                         <%= password.website %>
+                                        <button class="copy-btn" onclick="copyToClipboard('<%= password.website %>')">
+                                            <i class='bx bx-copy bx-sm' style="color: #ffffff;"></i>
+                                        </button>
                                     </td>
-                                    <td>
+                                    <td id="login">
                                         <%= password.login %>
+                                        <button class="copy-btn" onclick="copyToClipboard('<%= password.login %>')">
+                                            <i class='bx bx-copy bx-sm' style="color: #ffffff;"></i>
+                                        </button>
                                     </td>
                                     <td id="password-<%= password.id %>">
-                                        <%= password.password %>
+                                        <span class="password-stars" id="password-stars-<%= password.id %>">
+                                            <%= '•' .repeat(password.password.length) %>
+                                        </span>
+                                        <span class="real-password" id="real-password-<%= password.id %>"
+                                            style="display: none;">
+                                            <%= password.password %>
+                                        </span>
+                                        <button class="decrypt-btn" data-id="<%= password.id %>">
+                                            <i class='bx bx-show bx-sm' style="color:#ffffff"
+                                                id="showPassword"></i>
+                                        </button>
                                     </td>
-                                    <td><button class="decrypt-btn" data-id="<%= password.id %>">Decrypt</button>
-                                    <td><button class="delete-btn" data-id="<%= password.id %>">Delete</button></td>
+
+                                    <td>
+                                        <button class="delete-btn" data-id="<%= password.id %>"><i class='bx bx-trash bx-sm' style="color:#ffffff"></i></button>
+                                        <button class="change-btn" data-id="<%= password.id %>"><i class='bx bx-edit-alt bx-sm' style="color: #ffffff;"></i></button>
+                                    </td>
                                 </tr>
-                                <% }); %>
+                            <% }); %>
                         </tbody>
                     </table>
                 </div>
@@ -72,35 +91,34 @@
 
                 <div class="field url-f">
                     <label class="pop-label" for="url">URL:</label>
-                    <input name="website" type="text" id="url" placeholder="Введіть URL">
-                    <button onclick="copyToClipboard('url')"><i class='bx bx-copy'></i></button>
+                    <input name="website" type="text" id="url" placeholder="Введіть URL" required>
+                    <button type="button" onclick="copyToClipboard(document.getElementById('url').value)"><i class='bx bx-copy'></i></button>
                 </div>
 
                 <div class="field login-f">
                     <label class="pop-label" for="login">Login:</label>
-                    <input name="login" type="text" id="login" placeholder="Введіть логін">
-                    <button onclick="copyToClipboard('login')"><i class='bx bx-copy'></i></button>
+                    <input name="login" type="text" id="login" placeholder="Введіть логін" required>
+                    <button type="button" onclick="copyToClipboard(document.getElementById('login').value)"><i class='bx bx-copy'></i></button>
                 </div>
 
                 <div class="field pass-f">
                     <label class="pop-label" for="pass">Password:</label>
-                    <input name="password" id="pass" placeholder="Введіть пароль">
-                    <button onclick="copyToClipboard('pass')"><i class='bx bx-copy'></i></button>
+                    <input name="password" id="pass" placeholder="Введіть пароль" required>
+                    <button type="button" onclick="copyToClipboard(document.getElementById('pass').value)"><i class='bx bx-copy'></i></button>
                 </div>
 
-                <div id="generated-password"></div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="strength-bar"></div>
+                </div>
 
                 <div class="button-container">
-                <button type="button" class="generate-pass">Generate Password</button>
-                <button type="button" class="settings-btn"><i class='bx bx-cog'></i></button>
-
-                <button type="submit" class="btn save-btn">Save</button>
-            </div>
+                    <button type="button" class="generate-pass">Generate Password</button>
+                    <button type="button" class="settings-btn"><i class='bx bx-cog'></i></button>
+                    <button type="submit" class="btn save-btn">Save</button>
+                </div>
             </div>
         </div>
     </form>
-
-
 
     <form id="generate-password-form">
         <div class="popup-bg-settings">
@@ -149,7 +167,16 @@
             </div>
         </div>
     </form>
+
     <script>
+        async function copyToClipboard(value) {
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const deleteButtons = document.querySelectorAll('.delete-btn');
             const decryptButtons = document.querySelectorAll('.decrypt-btn');
@@ -160,56 +187,102 @@
                     const id = button.getAttribute('data-id');
                     try {
                         const response = await fetch(`/dashboard/delete/${id}`);
-
                         const result = await response.json();
 
                         if (result.success) {
-                            // Удаляем строку из таблицы
                             const row = document.querySelector(`tr[data-id="${id}"]`);
                             row.remove();
                         } else {
                             alert('Failed to delete password');
                         }
+                        location.reload();
                     } catch (error) {
                         console.error('Error:', error);
                     }
                 });
             });
-            
+
             decryptButtons.forEach(button => {
                 button.addEventListener('click', async function () {
                     const id = button.getAttribute('data-id');
+                    const passwordStars = document.getElementById(`password-stars-${id}`);
+                    const realPassword = document.getElementById(`real-password-${id}`);
+                    const icon = button.querySelector('i');
 
-                    try {
-                        const response = await fetch(`/dashboard/decrypt/${id}`);
-                        const result = await response.json();
+                    if (realPassword.style.display === 'none') {
+                        try {
+                            const response = await fetch(`/dashboard/decrypt/${id}`);
+                            const result = await response.json();
 
-                        if (result.decryptedPassword) {
-                            document.getElementById(`password-${id}`).textContent = result.decryptedPassword;
-                        } else {
-                            alert('Failed to decrypt password');
+                            if (result.decryptedPassword) {
+                                realPassword.textContent = result.decryptedPassword;
+                                passwordStars.style.display = 'none';
+                                realPassword.style.display = 'inline';
+                                copyToClipboard(result.decryptedPassword);
+                                icon.className = 'bx bxs-hide bx-sm';
+                                // Set a timeout to hide the password after 5 seconds
+                                setTimeout(() => {
+                                    passwordStars.style.display = 'inline';
+                                    realPassword.style.display = 'none';
+                                    icon.className = 'bx bx-show bx-sm';
+                                }, 15000);
+
+                                alert('Password view for 15 seconds and copied to clipboard');
+                            } else {
+                                alert('Failed to decrypt password');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
                         }
-                    } catch (error) {
-                        console.error('Error:', error);
+                    } else {
+                        // Скрываем пароль обратно и показываем звёздочки
+                        passwordStars.style.display = 'inline';
+                        realPassword.style.display = 'none';
+                        icon.className = 'bx bx-show bx-sm';
                     }
                 });
             });
-        });
 
+            // Функция для обновления полоски силы пароля
+            document.getElementById('pass').addEventListener('input', updateStrengthBar);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const generatePassButton = document.querySelector('.generate-pass');
+            function updateStrengthBar() {
+                const strengthBar = document.getElementById('strength-bar');
+                const password = document.getElementById('pass').value;
+                let strength = 0;
 
-            // Проверяем, что кнопка найдена
-            if (!generatePassButton) {
-                console.error('Generate Password button not found');
-                return;
+                if (password.length > 7) strength += 1; // длина пароля больше 7 символов
+                if (/[A-Z]/.test(password)) strength += 1; // содержит заглавные буквы
+                if (/[0-9]/.test(password)) strength += 1; // содержит цифры
+                if (/[\W]/.test(password)) strength += 1; // содержит специальные символы
+
+                switch (strength) {
+                    case 0:
+                        strengthBar.style.width = '0%';
+                        strengthBar.style.backgroundColor = 'red';
+                        break;
+                    case 1:
+                        strengthBar.style.width = '25%';
+                        strengthBar.style.backgroundColor = 'red';
+                        break;
+                    case 2:
+                        strengthBar.style.width = '50%';
+                        strengthBar.style.backgroundColor = 'orange';
+                        break;
+                    case 3:
+                        strengthBar.style.width = '75%';
+                        strengthBar.style.backgroundColor = 'yellowgreen';
+                        break;
+                    case 4:
+                        strengthBar.style.width = '100%';
+                        strengthBar.style.backgroundColor = 'green';
+                        break;
+                }
             }
 
             generatePassButton.addEventListener('click', async function (event) {
-                event.preventDefault(); // Предотвращаем перезагрузку страницы
+                event.preventDefault();
 
-                // Получаем значения из формы
                 const length = document.getElementById('length').value;
                 const numbers = document.querySelector('input[name="numbers"]').checked;
                 const symbols = document.querySelector('input[name="symbols"]').checked;
@@ -218,7 +291,6 @@
                 const strict = document.querySelector('input[name="strict"]').checked;
 
                 try {
-                    // Отправляем запрос на сервер для генерации пароля
                     const response = await fetch('/dashboard/generate-password', {
                         method: 'POST',
                         headers: {
@@ -238,25 +310,15 @@
                         throw new Error('Network response was not ok');
                     }
 
-                    // Получаем ответ от сервера
                     const result = await response.json();
-                    console.log(result); // Выводим результат в консоль
-
-                    // Вставляем сгенерированный пароль в поле или показываем в поп-апе
-                    document.getElementById('pass').value = result.password;
-                    document.getElementById('generated-password').textContent = `Generated Password: ${result.password}`;
+                    const passwordField = document.getElementById('pass');
+                    updateStrengthBar();
+                    passwordField.value = result.password;
                 } catch (error) {
                     console.error('Error during password generation:', error);
                 }
             });
         });
-
-        function copyToClipboard(id) {
-            const copyText = document.getElementById(id);
-            copyText.select();
-            document.execCommand('copy');
-            alert("Copied to clipboard: " + copyText.value);
-        }
     </script>
 
     <script src="/js/jquerry.min.js"></script>

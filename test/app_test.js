@@ -32,8 +32,8 @@ app.use('/', dashboardRoutes);
 app.use('/', mainPageRoutes);
 
 db.sync({ force: false }).then(() => {
-    // Уберите этот вызов из экспорта
-    // app.listen(PORT, console.log(`Server is running on port: ${PORT}`))
+  // Уберите этот вызов из экспорта
+  // app.listen(PORT, console.log(`Server is running on port: ${PORT}`))
 });
 
 export default app; // Экспортируем приложение
