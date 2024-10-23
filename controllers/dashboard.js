@@ -1,5 +1,4 @@
 
-// dashboard.js
 import UserPassword from '../models/UserPassword.js';
 import encryptionService from '../services/encryption.js';
 import generator from 'generate-password';
@@ -34,10 +33,42 @@ export default {
                 iv: encryptedData.iv
             });
             res.redirect('/dashboard?passwordsaved');
-        }
+         }
         } catch (error) {
             console.error(error);
             res.render('Dashboard', { error: 'Failed to save password' });
+        }
+    },
+
+    updateUserPassword: async (req, res) => {
+        const { id } = req.params;
+        const { website, login, password } = req.body;
+        const userId = req.user.id;
+        try {
+            const userPassword = await UserPassword.findByPk(id);
+
+            if (!userPassword || userPassword.userId !== userId) {
+                return res.status(404).json({ success: false, message: 'Password not found' });
+            }
+
+            const user = await User.findByPk(userId);
+            const { secretKey } = user;
+
+            const encryptedData = encryptionService.encryptPassword(password, secretKey);
+
+            userPassword.website = website || userPassword.website;
+            userPassword.login = login || userPassword.login;
+            userPassword.password = encryptedData.password || userPassword.password;
+            userPassword.iv = encryptedData.iv || userPassword.iv;
+
+            await userPassword.save();
+
+            res.json({ success: true, message: 'Password updated successfully' });
+
+        } catch (error) {
+            console.error(catchError);
+            res.status(500).json({ success: false, message: 'An error occurred' });
+
         }
     },
 
@@ -52,6 +83,20 @@ export default {
         }
     },
 
+    getUserPasswordById: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const password = await UserPassword.findByPk(id);
+            if (!password) {
+                return res.status(404).json({ success: false, message: 'Password not found' });
+            }
+            res.json({ password });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: 'An error occurred' });
+        }
+    },
+    
     deleteUserPassword: async (req, res) => {
         const { id } = req.params;
         try {
@@ -68,7 +113,8 @@ export default {
             res.status(500).json({ success: false, message: 'An error occurred' });
         }
     },
-    
+
+
     decryptPassword: async (req, res) => {
         const { id } = req.params;
         try {
@@ -98,8 +144,6 @@ export default {
             excludeSimilarCharacters: excludeSimilarCharacters === 'on',
             strict: strict === 'on',
         });
-
-        console.log(password);
         res.json({ password });
     }
 
