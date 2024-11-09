@@ -15,5 +15,9 @@ $('.close-popup-settings').click(function(){
 });
 
 $('.change-btn').click(function(){
-    $('.popup-bg').fadeIn(600);
+    $('.popup-bg-edit').fadeIn(600);
+});
+
+$('.close-popup-edit').click(function(){
+    $('.popup-bg-edit').fadeOut(600);
 });
