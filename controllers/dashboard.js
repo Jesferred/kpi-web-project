@@ -41,21 +41,21 @@ export default {
     },
 
     updateUserPassword: async (req, res) => {
-        const { id } = req.params;
-        const { website, login, password } = req.body;
+        const { id, website, login, password } = req.body;
         const userId = req.user.id;
+    
         try {
             const userPassword = await UserPassword.findByPk(id);
-
+            
             if (!userPassword || userPassword.userId !== userId) {
                 return res.status(404).json({ success: false, message: 'Password not found' });
             }
-
+    
             const user = await User.findByPk(userId);
             const { secretKey } = user;
-
+    
             const encryptedData = encryptionService.encryptPassword(password, secretKey);
-
+    
             userPassword.website = website || userPassword.website;
             userPassword.login = login || userPassword.login;
             userPassword.password = encryptedData.password || userPassword.password;
@@ -63,14 +63,13 @@ export default {
 
             await userPassword.save();
 
-            res.json({ success: true, message: 'Password updated successfully' });
-
+            res.redirect('/dashboard?passwordupdated');
         } catch (error) {
-            console.error(catchError);
+            console.error('Error:', error);
             res.status(500).json({ success: false, message: 'An error occurred' });
-
         }
     },
+    
 
     getUserPassword: async (req, res) => {
         const userId = req.user.id;
@@ -85,12 +84,26 @@ export default {
 
     getUserPasswordById: async (req, res) => {
         const { id } = req.params;
+        const userId = req.user.id;
         try {
             const password = await UserPassword.findByPk(id);
             if (!password) {
                 return res.status(404).json({ success: false, message: 'Password not found' });
-            }
-            res.json({ password });
+            } 
+            const user = await User.findByPk(userId);
+            // console.log(user);
+            const { secretKey } = user;
+
+            const decryptedData = encryptionService.decryptPassword(password.password, password.iv, secretKey);
+
+            res.json({
+                success: true,
+                password: {
+                    website: password.website,
+                    login: password.login,
+                    decryptedPassword: decryptedData
+                }
+            });
         } catch (error) {
             console.error(error);
             res.status(500).json({ success: false, message: 'An error occurred' });

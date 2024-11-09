@@ -14,3 +14,10 @@ $('.close-popup-settings').click(function(){
     $('.popup-bg-settings').fadeOut(600);
 });
 
+$('.change-btn').click(function(){
+    $('.popup-bg-edit').fadeIn(600);
+});
+
+$('.close-popup-edit').click(function(){
+    $('.popup-bg-edit').fadeOut(600);
+});

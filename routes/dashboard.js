@@ -14,7 +14,7 @@ router.get('/dashboard/passwords', protectRoute, dashboardController.getUserPass
 router.post('/dashboard/add', dashboardController.savePassword);
 
 // Редактирование существующего пароля по его id
-router.post('/dashboard/edit/:id', dashboardController.updateUserPassword);
+router.post('/dashboard/edit/', dashboardController.updateUserPassword);
 
 // Удаление пароля по его id
 router.get('/dashboard/delete/:id', dashboardController.deleteUserPassword);
@@ -23,7 +23,7 @@ router.get('/dashboard/delete/:id', dashboardController.deleteUserPassword);
 router.get('/dashboard/decrypt/:id', dashboardController.decryptPassword);
 
 // Получение конкретного пароля по id
-router.get('/dashboard/get-password/:id', protectRoute, dashboardController.getUserPasswordById);
+router.get('/dashboard/password/:id', dashboardController.getUserPasswordById);
 
 // Генерация нового пароля
 router.post('/dashboard/generate-password', dashboardController.generateNewPassword);
