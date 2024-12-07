@@ -8,32 +8,28 @@ import mainPageRoutes from '../routes/mainPage.js';
 import db from '../db.js';
 import { initPassport } from '../auth.js';
 
-dotenv.config({ path: '.env.test' }); // Подгружаем файл .env.test
+dotenv.config({ path: '.env.test' }); // Загружаем переменные окружения для тестов
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static('public'));
 
+// Настройка сессий и Passport
 initPassport();
 app.use(session({
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: true
+  secret: 'secret',
+  saveUninitialized: true,
+  resave: true,
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Маршруты
 app.use('/', authRoutes);
 app.use('/', dashboardRoutes);
 app.use('/', mainPageRoutes);
 
-db.sync({ force: false }).then(() => {
-  // Уберите этот вызов из экспорта
-  // app.listen(PORT, console.log(`Server is running on port: ${PORT}`))
-});
-
-export default app; // Экспортируем приложение
+export default app; // Экспорт приложения без запуска

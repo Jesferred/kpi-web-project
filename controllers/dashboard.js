@@ -142,10 +142,6 @@ export default {
         }
     },
 
-    viewTestPage: (req, res) => {
-        res.render('Test');
-    },
-
     generateNewPassword: async (req, res) => {
         const { length, numbers, symbols, uppercase, excludeSimilarCharacters, strict } = req.body;
 

@@ -28,7 +28,5 @@ router.get('/dashboard/password/:id', dashboardController.getUserPasswordById);
 // Генерация нового пароля
 router.post('/dashboard/generate-password', dashboardController.generateNewPassword);
 
-// Страница тестирования генерации паролей
-router.get('/generate-password', dashboardController.viewTestPage);
 
 export default router;

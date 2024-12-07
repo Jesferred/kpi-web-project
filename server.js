@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
@@ -8,7 +7,6 @@ import mainPageRoutes from './routes/mainPage.js';
 import db from './db.js';
 import { initPassport } from './auth.js';
 
-dotenv.config({ path: '.env.test' }); // Подгружаем файл .env.test
 
 const app = express();
 const PORT = process.env.PORT || 3000;

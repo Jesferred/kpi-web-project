@@ -1,4 +1,4 @@
-import encryptionService from '../../services/encryption.js';
+import encryptionService from '../services/encryption.js';
 
 describe('Encryption - Decryption', () => {
     let secretKey;

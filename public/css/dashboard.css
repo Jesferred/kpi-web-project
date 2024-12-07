@@ -48,8 +48,6 @@ body, html {
 }
 
 .info {
-  writing-mode: sideways-rl; /* or sideways-rl for right-to-left */
-  transform: rotate(90deg);
   width: 20px; /* adjust the width to your liking */
   height: 100px; /* adjust the height to your liking */
   display: inline-block;

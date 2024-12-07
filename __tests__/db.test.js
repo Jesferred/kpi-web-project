@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize';
-import User from '../../models/User.js';
-import UserPassword from '../../models/UserPassword.js';
-import db from '../../db.js';
-import encryptionService from '../../services/encryption.js';
+import User from '../models/User.js';
+import UserPassword from '../models/UserPassword.js';
+import db from '../db.js';
+import encryptionService from '../services/encryption.js';
 
 
 describe('Database connection', () => {
